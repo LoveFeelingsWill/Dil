@@ -8,7 +8,7 @@ from pyrogram import Client, filters
 from pyrogram.types import Message
 
 from YukkiMusic import app
-from YukkiMusic.helper.http import fetch
+from YukkiMusic.utils.http import fetch
 
 __MODULE__ = "Fun"
 __HELP__ = """
