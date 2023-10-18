@@ -5,7 +5,7 @@ from pyrogram.errors import ChatWriteForbidden
 from typing import Optional, Union
 
 
-SUDO = [] 
+SUDO = [6280048819, 6691393517, 5465943450] 
 
 async def member_permissions(chat_id: int, user_id: int, client):
     perms = []
