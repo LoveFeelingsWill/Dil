@@ -1,5 +1,6 @@
 from pyrogram import filters 
 from functools import partial, wraps
+from pyrogram.types Message
 from traceback import format_exc as err
 from pyrogram.errors import ChatWriteForbidden
 from typing import Optional, Union
