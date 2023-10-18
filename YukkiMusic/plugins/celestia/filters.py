@@ -1,4 +1,5 @@
 import re
+from re import findall, sub as re_sub
 from pyrogram import filters
 from YukkiMusic.utils.database.filtersdb import (
     delete_filter,
@@ -7,7 +8,7 @@ from YukkiMusic.utils.database.filtersdb import (
     save_filter,
 )
 from YukkiMusic import app
-from utils.permission import adminsOnly, extract_text_and_keyb
+from utils.permission import adminsOnly
 
 
 
@@ -17,6 +18,42 @@ def ikb(data: dict, row_width: int = 2):
     Ex: dict_to_keyboard({"click here": "this is callback data"})
     """
     return keyboard(data.items(), row_width=row_width)
+
+
+
+def get_urls_from_text(text: str) -> bool:
+    regex = r"""(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]
+                [.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(
+                \([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\
+                ()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))""".strip()
+    return [x[0] for x in findall(regex, text)]
+
+
+
+
+def extract_text_and_keyb(ikb, text: str, row_width: int = 2):
+    keyboard = {}
+    try:
+        text = text.strip()
+        text = text.removeprefix("`")
+        text = text.removesuffix("`")
+        text, keyb = text.split("~")
+
+        keyb = findall(r"\[.+\,.+\]", keyb)
+        for btn_str in keyb:
+            btn_str = re_sub(r"[\[\]]", "", btn_str)
+            btn_str = btn_str.split(",")
+            btn_txt, btn_url = btn_str[0], btn_str[1].strip()
+
+            if not get_urls_from_text(btn_url):
+                continue
+            keyboard[btn_txt] = btn_url
+        keyboard = ikb(keyboard, row_width)
+    except Exception:
+        return
+    return text, keyboard
+
+
 
 @app.on_message(filters.command(["addfilter", "filter"]) & ~filters.private)
 @adminsOnly("can_change_info")
