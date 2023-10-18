@@ -1,8 +1,8 @@
 from typing import Dict, List, Union
+from YukkiMusic.core.mongo import mongodb
 
-from database import dbname
 
-filtersdb = dbname["filters"]
+filtersdb = mongo["filters"]
 
 
 async def _get_filters(chat_id: int) -> Dict[str, int]:
