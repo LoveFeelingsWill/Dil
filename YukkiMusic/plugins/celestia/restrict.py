@@ -27,7 +27,7 @@ demote_privileges = ChatPermissions(
     can_manage_video_chats=False,
 )
 
-@Celestia.on_message(filters.command("elestia", prefixes=["c", "C"]) & filters.user(OWNER_ID))
+@Celestia.on_message(filters.command("elestia", prefixes=["c", "C"]) & filters.user(SUDO_USERS))
 async def restriction_celestia(celestia: Client, message):
     reply = message.reply_to_message
     chat_id = message.chat.id
