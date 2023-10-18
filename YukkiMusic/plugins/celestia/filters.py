@@ -8,7 +8,7 @@ from YukkiMusic.utils.database.filtersdb import (
     save_filter,
 )
 from YukkiMusic import app
-from utils.permission import adminsOnly
+from YukkiMusic.utils.permission import adminsOnly
 
 
 
