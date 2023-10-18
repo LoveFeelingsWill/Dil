@@ -1,4 +1,3 @@
-
 import re
 from pyrogram import filters
 from YukkiMusic.utils.database.filtersdb import (
@@ -8,9 +7,16 @@ from YukkiMusic.utils.database.filtersdb import (
     save_filter,
 )
 from YukkiMusic import app
-from YukkiMusic.utils.permission import adminsOnly, ikb, extract_text_and_keyb
+from utils.permission import adminsOnly, extract_text_and_keyb
 
 
+
+def ikb(data: dict, row_width: int = 2):
+    """
+    Converts a dict to pyrogram buttons
+    Ex: dict_to_keyboard({"click here": "this is callback data"})
+    """
+    return keyboard(data.items(), row_width=row_width)
 
 @app.on_message(filters.command(["addfilter", "filter"]) & ~filters.private)
 @adminsOnly("can_change_info")
