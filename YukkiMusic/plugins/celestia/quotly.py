@@ -1,20 +1,20 @@
-# * @author        Yasir Aris M <yasiramunandar@gmail.com>
-# * @date          2023-06-21 22:12:27
-# * @projectName   MissKatyPyro
-# * Copyright ©YasirPedia All rights reserved
 from io import BytesIO
-
 from pyrogram import Client, filters
 from pyrogram.types import Message
+from YukkiMusic import app as Celestia
+from httpx import AsyncClient, Timeout
 
-from YukkiMusic import app
-from YukkiMusic.utils.http import fetch
 
-__MODULE__ = "Fun"
-__HELP__ = """
-/q [int] - Generate quotly from message
-/memify [text] - Reply to sticker to give text on sticker.
-"""
+
+fetch = AsyncClient(
+    http2=True,
+    verify=False,
+    headers={
+        "Accept-Language": "id-ID",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edge/107.0.1418.42",
+    },
+    timeout=Timeout(20),
+)
 
 
 class QuotlyException(Exception):
@@ -249,8 +249,8 @@ def isArgInt(txt) -> list:
         return [False, 0]
 
 
-@app.on_message(filters.command(["q", "qr"]) & filters.reply)
-async def msg_quotly_cmd(self: Client, ctx: Message):
+@Celestia.on_message(filters.command(["q", "qr"]) & filters.reply)
+async def msg_quotly_cmd(self: Celestia, ctx: Message):
     is_reply = False
     if ctx.command[0].endswith("r"):
         is_reply = True
