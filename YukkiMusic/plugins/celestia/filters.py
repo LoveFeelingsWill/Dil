@@ -10,16 +10,12 @@ from YukkiMusic.utils.database.filtersdb import (
 from YukkiMusic import app
 from YukkiMusic.utils.permission import adminsOnly
 
-
-
 def ikb(data: dict, row_width: int = 2):
     """
     Converts a dict to pyrogram buttons
     Ex: dict_to_keyboard({"click here": "this is callback data"})
     """
     return keyboard(data.items(), row_width=row_width)
-
-
 
 def get_urls_from_text(text: str) -> bool:
     regex = r"""(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]
@@ -28,9 +24,6 @@ def get_urls_from_text(text: str) -> bool:
                 ()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))""".strip()
     return [x[0] for x in findall(regex, text)]
 
-
-
-
 def extract_text_and_keyb(ikb, text: str, row_width: int = 2):
     keyboard = {}
     try:
@@ -38,13 +31,11 @@ def extract_text_and_keyb(ikb, text: str, row_width: int = 2):
         text = text.removeprefix("`")
         text = text.removesuffix("`")
         text, keyb = text.split("~")
-
         keyb = findall(r"\[.+\,.+\]", keyb)
         for btn_str in keyb:
             btn_str = re_sub(r"[\[\]]", "", btn_str)
             btn_str = btn_str.split(",")
             btn_txt, btn_url = btn_str[0], btn_str[1].strip()
-
             if not get_urls_from_text(btn_url):
                 continue
             keyboard[btn_txt] = btn_url
@@ -52,8 +43,6 @@ def extract_text_and_keyb(ikb, text: str, row_width: int = 2):
     except Exception:
         return
     return text, keyboard
-
-
 
 @app.on_message(filters.command(["addfilter", "filter"]) & ~filters.private)
 @adminsOnly("can_change_info")
@@ -82,7 +71,6 @@ async def save_filters(_, m):
     await m.reply_msg(f"__**Saved filter {name}.**__")
     await m.stop_propagation()
 
-
 @app.on_message(filters.command("filters") & ~filters.private)
 async def get_filterss(_, m):
     _filters = await get_filters_names(m.chat.id)
@@ -93,7 +81,6 @@ async def get_filterss(_, m):
     for _filter in _filters:
         msg += f"**-** `{_filter}`\n"
     await m.reply_msg(msg)
-
 
 @app.on_message(filters.command(["stop", "stopfilter"]) & ~filters.private)
 @adminsOnly("can_change_info")
@@ -110,7 +97,6 @@ async def del_filter(_, m):
     else:
         await m.reply_msg("**No such filter.**")
     await m.stop_propagation()
-
 
 @app.on_message(
     filters.text & ~filters.private & ~filters.via_bot & ~filters.forwarded,
@@ -133,18 +119,15 @@ async def filters_re(_, message):
                 if re.findall(r"\[.+\,.+\]", data):
                     if keyboard := extract_text_and_keyb(ikb, data):
                         data, keyb = keyboard
-
                 if message.reply_to_message:
                     await message.reply_to_message.reply(
                         data,
                         reply_markup=keyb,
                         disable_web_page_preview=True,
                     )
-
                     if text.startswith("~"):
                         await message.delete()
                     return
-
                 return await message.reply(
                     data,
                     reply_markup=keyb,
@@ -153,7 +136,6 @@ async def filters_re(_, message):
                 )
             if message.reply_to_message:
                 await message.reply_to_message.reply_sticker(data)
-
                 if text.startswith("~"):
                     await message.delete()
                 return
@@ -161,4 +143,4 @@ async def filters_re(_, message):
 
 
 
-                     
+            
